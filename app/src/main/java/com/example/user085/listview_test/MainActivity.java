@@ -3,14 +3,17 @@ package com.example.user085.listview_test;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.MenuView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +24,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        List<Spot> spolist = getSpolist();
+        final List<Spot> spolist = getSpolist();
         lvspot = (ListView)findViewById(R.id.lvspot);
         lvspot.setAdapter(new SpotAdapter(this, spolist));
+        lvspot.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Spot spot = spolist.get(position);
+                Toast.makeText(MainActivity.this, spot.getName(),Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
 
@@ -42,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         public SpotAdapter( Context context, List<Spot> spotList ) {
 
             this.context = context;
-            this.spotList=spotList;
+            this.spotList= spotList;
         }
 
         @Override
@@ -61,10 +72,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View itemView, ViewGroup parent) {
             Spot spot = spotList.get(position);
             LayoutInflater laoutInflater = LayoutInflater.from(context);
-            View itemView = laoutInflater.inflate(R.layout.item_view,parent,false);
+            if (itemView==null){
+                 itemView = laoutInflater.inflate(R.layout.item_view,parent,false);
+            }
+
 
            // 3個 放到UI的 還沒做
             ImageView ivSpot = (ImageView) itemView.findViewById(R.id.ivspot);
